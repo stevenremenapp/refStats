@@ -8,7 +8,7 @@
             <span>Time: {{ interaction.time }}</span>
         </li>
     </ul>
-    <button @click="addTechInteraction">Add Tech</button>
+    <button @click="submitTechInteraction">Add Tech</button>
     <button>Add Reference</button>
     </div>
 </template>
@@ -20,8 +20,16 @@ export default {
         interactions: Array
     },
     methods: {
-        addTechInteraction() {
-            console.log('Add tech!');
+        submitTechInteraction() {
+            let time = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true})
+            let type = "technology"
+            let techInteraction = {
+                type: type,
+                time: time
+            }
+            console.log(techInteraction)
+
+            this.$emit('add:techInteraction', techInteraction)
         }
     }
 }

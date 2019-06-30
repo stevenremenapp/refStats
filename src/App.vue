@@ -3,6 +3,7 @@
     <Header />
     <Interactions
       :interactions="interactions"
+      @add:techInteraction="addTechInteraction"
     />
   </div>
 </template>
@@ -31,6 +32,20 @@ export default {
         const response = await fetch(`${process.env.VUE_APP_ROOT_API}/interactions`)
         const data = await response.json()
         this.interactions = data
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async addTechInteraction(techInteraction) {
+      try {
+        const response = await fetch(`${process.env.VUE_APP_ROOT_API}/interactions`, {
+          method: 'POST',
+          body: JSON.stringify(techInteraction),
+          headers: { "Content-type": "application/json; charset=UTF-8" }
+        })
+        const data = await response.json()
+        this.interactions = [...this.interactions, data]
       } catch (error) {
         console.error(error)
       }

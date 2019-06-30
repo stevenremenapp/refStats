@@ -92,6 +92,13 @@ func allInteractions(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println(dbHost)
 }
 
+func postInteraction(w http.ResponseWriter, r *http.Request) {
+	var interaction Interaction
+	json.NewDecoder(r.Body).Decode(&interaction)
+	db.Create(&interaction)
+	json.NewEncoder(w).Encode(&interaction)
+}
+
 func homePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "HomePage!")
@@ -103,6 +110,7 @@ func handleRequests() {
 
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/interactions", allInteractions).Methods("GET")
+	myRouter.HandleFunc("/interactions", postInteraction).Methods("POST")
 	handler := cors.Default().Handler(myRouter)
 	http.ListenAndServe(":5000", handler)
 }
