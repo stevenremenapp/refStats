@@ -8,8 +8,8 @@
             <span>Time: {{ interaction.time }}</span>
         </li>
     </ul>
-    <button @click="submitTechInteraction">Add Tech</button>
-    <button>Add Reference</button>
+    <button @click="submitInteraction" name="technology">Add Tech</button>
+    <button @click="submitInteraction" name="reference">Add Reference</button>
     </div>
 </template>
 
@@ -20,16 +20,15 @@ export default {
         interactions: Array
     },
     methods: {
-        submitTechInteraction() {
+        submitInteraction() {
             let time = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true})
-            let type = "technology"
-            let techInteraction = {
+            let type = event.target.name === "technology" ? "technology" : "reference"
+            let interaction = {
                 type: type,
                 time: time
             }
-            console.log(techInteraction)
 
-            this.$emit('add:techInteraction', techInteraction)
+            this.$emit('add:Interaction', interaction)
         }
     }
 }
