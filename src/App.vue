@@ -1,36 +1,40 @@
 <template>
   <div id="app">
     <Header />
-    <h1>Interactions</h1>
-    <ul>
-      <li v-for="interaction in interactions" v-bind:key="interaction.id">
-        <span>ID: {{ interaction.id }}</span><br>
-        <span>Type: {{ interaction.type }}</span><br>
-        <span>Time: {{ interaction.time }}</span>
-      </li>
-    </ul>
+    <Interactions
+      :interactions="interactions"
+    />
   </div>
 </template>
 
 <script>
 import Header from './components/Header'
+import Interactions from './components/Interactions'
 
 export default {
   name: 'app',
   components: {
-    Header
+    Header,
+    Interactions
   },
   data() {
     return {
       interactions: []
     }
   },
-  created() {
-    fetch('http://localhost:5000/interactions')
-    .then(response => response.json())
-    .then(json => {
-      this.interactions = json
-    })
+  mounted() {
+    this.getInteractions()
+  },
+  methods: {
+    async getInteractions() {
+      try {
+        const response = await fetch(`${process.env.VUE_APP_ROOT_API}/interactions`)
+        const data = await response.json()
+        this.interactions = data
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 }
 </script>
