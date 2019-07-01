@@ -28,17 +28,19 @@ import (
 // DB_NAME=refstats
 
 var dbHost = os.Getenv("HOST")
-var dbPort = os.Getenv("PORT")
+var dbPort = os.Getenv("DBPORT")
 var dbUser = os.Getenv("USER")
 var dbPassword = os.Getenv("PASSWORD")
 var dbName = os.Getenv("NAME")
+var serverPort = os.Getenv("SERVERPORT")
 
 var (
-	host     = dbHost
-	port     = dbPort
-	user     = dbUser
-	password = dbPassword
-	dbname   = dbName
+	host       = dbHost
+	dbport     = dbPort
+	user       = dbUser
+	password   = dbPassword
+	dbname     = dbName
+	serverport = serverPort
 )
 
 type Interaction struct {
@@ -99,6 +101,20 @@ func postInteraction(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&interaction)
 }
 
+func deleteInteraction(w http.ResponseWriter, r *http.Request) {
+	// w.Header().Set("Access-Control-Allow-Methods", "DELETE")
+	// w.Header().Set("Content-Type", "application/json")
+	fmt.Println("Delete endpoint hit")
+	params := mux.Vars(r)
+	var interaction Interaction
+	db.First(&interaction, params["id"])
+	db.Delete(&interaction)
+
+	var interactions []Interaction
+	db.Find(&interactions)
+	json.NewEncoder(w).Encode(&interactions)
+}
+
 func homePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "HomePage!")
@@ -111,8 +127,12 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/interactions", allInteractions).Methods("GET")
 	myRouter.HandleFunc("/interactions", postInteraction).Methods("POST")
-	handler := cors.Default().Handler(myRouter)
-	http.ListenAndServe(":5000", handler)
+	myRouter.HandleFunc("/interactions/{id}", deleteInteraction).Methods("DELETE", "OPTIONS")
+	c := cors.New(cors.Options{
+		AllowedMethods: []string{"GET", "POST", "DELETE"},
+	})
+	handler := c.Handler(myRouter)
+	http.ListenAndServe(fmt.Sprintf(":%s", serverport), handler)
 }
 
 var db *gorm.DB
@@ -144,7 +164,7 @@ func main() {
 		"postgres",
 		fmt.Sprintf(
 			"host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-			host, port, user, dbname, password),
+			host, dbport, user, dbname, password),
 	)
 
 	// db, err = gorm.Open(

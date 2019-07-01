@@ -3,7 +3,8 @@
     <Header />
     <Interactions
       :interactions="interactions"
-      @add:Interaction="addInteraction"
+      @add:interaction="addInteraction"
+      @delete:interaction="deleteInteraction"
     />
   </div>
 </template>
@@ -46,6 +47,20 @@ export default {
         })
         const data = await response.json()
         this.interactions = [...this.interactions, data]
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async deleteInteraction(id) {
+      //console.log(`DELETED ${id}!`)
+      try {
+        const response = await fetch(`${process.env.VUE_APP_ROOT_API}/interactions/${id}`, {
+          method: 'DELETE'
+        })
+        const data = await response.json()
+        this.interactions = data
+        // this.interactions = this.interactions.filter(interaction => interaction.id !== id)
       } catch (error) {
         console.error(error)
       }

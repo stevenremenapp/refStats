@@ -6,6 +6,7 @@
             <span>ID: {{ interaction.id }}</span><br>
             <span>Type: {{ interaction.type }}</span><br>
             <span>Time: {{ interaction.time }}</span>
+            <button @click="$emit('delete:interaction', interaction.id)">Delete</button>
         </li>
     </ul>
     <button @click="submitInteraction" name="technology">Add Tech</button>
@@ -28,7 +29,7 @@ export default {
                 time: time
             }
 
-            this.$emit('add:Interaction', interaction)
+            this.$emit('add:interaction', interaction)
         }
     }
 }
