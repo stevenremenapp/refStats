@@ -16,17 +16,6 @@ import (
 	"github.com/rs/cors"
 )
 
-// dbname, exists := os.LookupEnv("DB_NAME")
-// 	if exists {
-// 		fmt.Println(dbname)
-// 	}
-
-// DB_HOST=127.0.0.1
-// DB_PORT=5432
-// DB_USER=postgres
-// DB_PASS=Octopus2017!
-// DB_NAME=refstats
-
 var dbHost = os.Getenv("HOST")
 var dbPort = os.Getenv("DBPORT")
 var dbUser = os.Getenv("USER")
