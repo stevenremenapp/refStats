@@ -80,7 +80,7 @@ func allInteractions(w http.ResponseWriter, r *http.Request) {
 	//w.Header().Set("Content-Type", "application/json")
 	db.Find(&interactions)
 
-	fmt.Println("Hit all interactions endpoint")
+	// fmt.Println("Hit all interactions endpoint")
 	json.NewEncoder(w).Encode(&interactions)
 
 	// dbHost, exists := os.LookupEnv("dbHost")
@@ -104,7 +104,7 @@ func postInteraction(w http.ResponseWriter, r *http.Request) {
 func deleteInteraction(w http.ResponseWriter, r *http.Request) {
 	// w.Header().Set("Access-Control-Allow-Methods", "DELETE")
 	// w.Header().Set("Content-Type", "application/json")
-	fmt.Println("Delete endpoint hit")
+	// fmt.Println("Delete endpoint hit")
 	params := mux.Vars(r)
 	var interaction Interaction
 	db.First(&interaction, params["id"])
@@ -115,16 +115,16 @@ func deleteInteraction(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&interactions)
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, "HomePage!")
-}
+// func homePage(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	fmt.Fprintf(w, "HomePage!")
+// }
 
 func handleRequests() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
 
-	myRouter.HandleFunc("/", homePage)
+	// myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/interactions", allInteractions).Methods("GET")
 	myRouter.HandleFunc("/interactions", postInteraction).Methods("POST")
 	myRouter.HandleFunc("/interactions/{id}", deleteInteraction).Methods("DELETE", "OPTIONS")
